@@ -128,6 +128,8 @@
             <div class="mt-auto -mx-4 -mb-3 overflow-hidden pointer-events-none select-none flex justify-start">
                 <img src="{{ asset('images/sidebar-illustration.png') }}"
                      alt="Siswa Rayon Cisarua 5"
+                     loading="lazy"
+                     decoding="async"
                      class="w-[85%] max-w-[220px] h-auto object-contain object-bottom" />
             </div>
 

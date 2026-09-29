@@ -18,6 +18,10 @@ class DutyMemberResource extends Resource
 {
     protected static ?string $model = DutyMember::class;
 
+    protected static ?string $modelLabel = 'Laporan Piket (Anggota)';
+    protected static ?string $pluralModelLabel = 'Laporan Piket';
+    protected static ?string $navigationLabel = 'Laporan Piket';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
     public static function form(Schema $schema): Schema

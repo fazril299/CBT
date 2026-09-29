@@ -12,51 +12,71 @@ use Illuminate\View\View;
 
 class ScheduleController extends Controller
 {
+    /**
+     * Tampilkan daftar seluruh jadwal piket dengan opsi filter tab.
+     */
     public function index(Request $request): View
     {
         $filter = $request->query('filter', 'all');
 
-        $query = Schedule::with(['dutyMembers.user', 'dutyMembers.attendances'])
-            ->orderBy('date', 'asc');
+        // Hanya eager-load dutyMembers.user untuk performa kartu yang ringan
+        $query = Schedule::with('dutyMembers.user')->orderBy('date', 'asc');
 
         if ($filter === 'my' && Auth::check()) {
             $userId = Auth::id();
-            $query->whereHas('dutyMembers', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
-            });
+            $query->whereHas('dutyMembers', fn ($q) => $q->where('user_id', $userId));
         } elseif ($filter === 'piket_wc') {
-            $query->where('piket_type', 'piket_wc');
+            $query->piketWc();
         } elseif ($filter === 'piket_rayon') {
-            $query->where('piket_type', 'piket_rayon');
+            $query->piketRayon();
         }
 
         $schedules = $query->get();
 
-        // Count totals for quick tabs
+        // Hitung total untuk label tab filter
         $totalAll = Schedule::count();
-        $totalWc = Schedule::where('piket_type', 'piket_wc')->count();
-        $totalRayon = Schedule::where('piket_type', 'piket_rayon')->count();
-        $totalMy = Auth::check() ? Schedule::whereHas('dutyMembers', function ($q) {
-            $q->where('user_id', Auth::id());
-        })->count() : 0;
+        $totalWc = Schedule::piketWc()->count();
+        $totalRayon = Schedule::piketRayon()->count();
+        $totalMy = Auth::check()
+            ? Schedule::whereHas('dutyMembers', fn ($q) => $q->where('user_id', Auth::id()))->count()
+            : 0;
 
-        return view('schedules.index', compact('schedules', 'filter', 'totalAll', 'totalWc', 'totalRayon', 'totalMy'));
+        return view('schedules.index', compact(
+            'schedules',
+            'filter',
+            'totalAll',
+            'totalWc',
+            'totalRayon',
+            'totalMy'
+        ));
     }
 
+    /**
+     * Tampilkan detail jadwal piket, anggota, dan form absensi/verifikasi.
+     */
     public function show(Schedule $schedule): View
     {
-        $schedule->load(['dutyMembers.user', 'dutyMembers.latestAttendance.verifiedBy', 'dutyMembers.attendances.verifiedBy', 'activities']);
+        $schedule->load([
+            'dutyMembers.user',
+            'dutyMembers.latestAttendance.verifiedBy',
+            'dutyMembers.attendances.verifiedBy',
+            'activities',
+        ]);
+
         $availableStudents = User::where('role', 'siswa')
             ->whereNotIn('id', $schedule->dutyMembers->pluck('user_id'))
             ->get();
 
         $currentUser = Auth::user();
-        $isPj = $currentUser ? $schedule->dutyMembers->where('user_id', $currentUser->id)->where('is_pj', true)->isNotEmpty() : false;
+        $isPj = $currentUser ? $schedule->isPj($currentUser->id) : false;
         $myDutyMember = $currentUser ? $schedule->dutyMembers->firstWhere('user_id', $currentUser->id) : null;
 
         return view('schedules.show', compact('schedule', 'availableStudents', 'isPj', 'myDutyMember'));
     }
 
+    /**
+     * Tampilkan formulir pembuatan jadwal baru.
+     */
     public function create(): View
     {
         $students = User::where('role', 'siswa')->orderBy('name')->get();
@@ -64,6 +84,9 @@ class ScheduleController extends Controller
         return view('schedules.create', compact('students'));
     }
 
+    /**
+     * Simpan jadwal baru beserta anggota yang ditugaskan.
+     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -104,9 +127,13 @@ class ScheduleController extends Controller
             ]);
         }
 
-        return redirect()->route('schedules.show', $schedule->id)->with('success', 'Jadwal '.$schedule->type_label.' dan anggota berhasil dibuat!');
+        return redirect()->route('schedules.show', $schedule->id)
+            ->with('success', 'Jadwal '.$schedule->type_label.' dan anggota berhasil dibuat!');
     }
 
+    /**
+     * Tampilkan formulir edit jadwal.
+     */
     public function edit(Schedule $schedule): View
     {
         $students = User::where('role', 'siswa')->orderBy('name')->get();
@@ -114,6 +141,9 @@ class ScheduleController extends Controller
         return view('schedules.edit', compact('schedule', 'students'));
     }
 
+    /**
+     * Perbarui data jadwal piket.
+     */
     public function update(Request $request, Schedule $schedule): RedirectResponse
     {
         $validated = $request->validate([
@@ -130,9 +160,13 @@ class ScheduleController extends Controller
 
         $schedule->update($validated);
 
-        return redirect()->route('schedules.show', $schedule->id)->with('success', 'Data jadwal '.$schedule->type_label.' berhasil diperbarui!');
+        return redirect()->route('schedules.show', $schedule->id)
+            ->with('success', 'Data jadwal '.$schedule->type_label.' berhasil diperbarui!');
     }
 
+    /**
+     * Perbarui status pelaksanaan jadwal (belum_dilakukan, sedang_berlangsung, selesai).
+     */
     public function updateStatus(Request $request, Schedule $schedule): RedirectResponse
     {
         $validated = $request->validate([
@@ -144,6 +178,9 @@ class ScheduleController extends Controller
         return back()->with('success', 'Status jadwal berhasil diperbarui!');
     }
 
+    /**
+     * Hapus jadwal piket beserta relasinya.
+     */
     public function destroy(Schedule $schedule): RedirectResponse
     {
         $schedule->delete();

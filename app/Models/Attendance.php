@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\AttendanceFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Attendance extends Model
 {
@@ -21,24 +22,13 @@ class Attendance extends Model
         ];
     }
 
-    public function dutyMember()
+    public function dutyMember(): BelongsTo
     {
         return $this->belongsTo(DutyMember::class);
     }
 
-    public function verifiedBy()
+    public function verifiedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'verified_by');
-    }
-
-    public function getStatusLabelAttribute(): string
-    {
-        return match ($this->status) {
-            'hadir' => 'Hadir (Terverifikasi)',
-            'menunggu_verifikasi' => 'Menunggu Verifikasi PJ',
-            'izin' => 'Izin',
-            'sakit' => 'Sakit',
-            default => 'Alpa (Denda Rp 5.000)',
-        };
     }
 }

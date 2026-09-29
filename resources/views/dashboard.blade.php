@@ -1,31 +1,4 @@
 <x-app-layout>
-    @php
-        $user = Auth::user();
-        $isAdmin = $user->role === 'admin';
-        
-        $totalSchedules = \App\Models\Schedule::count();
-        $totalPiketWc = \App\Models\Schedule::where('piket_type', 'piket_wc')->count();
-        $totalPiketRayon = \App\Models\Schedule::where('piket_type', 'piket_rayon')->count();
-        $totalStudents = \App\Models\User::where('role', 'siswa')->count();
-        $completedSchedules = \App\Models\Schedule::where('status', 'selesai')->count();
-        $pendingActivities = \App\Models\Activity::where('status', false)->count();
-        
-        // Next personal schedule for logged in student
-        $myNextSchedule = \App\Models\Schedule::with('dutyMembers.user')
-            ->whereHas('dutyMembers', function($q) use ($user) {
-                $q->where('user_id', $user->id);
-            })
-            ->where('date', '>=', now()->toDateString())
-            ->orderBy('date', 'asc')
-            ->first();
-
-        // Active schedules list
-        $recentSchedules = \App\Models\Schedule::with('dutyMembers.user')->orderBy('date', 'asc')->take(6)->get();
-
-        // Activities
-        $activityList = \App\Models\Activity::orderBy('status', 'asc')->orderBy('target_date', 'asc')->take(5)->get();
-    @endphp
-
     <div class="space-y-6">
       
         <div class="bg-white p-6 md:p-7 rounded-xl border border-[#EBEBEA] flex flex-col md:flex-row md:items-center justify-between gap-4">

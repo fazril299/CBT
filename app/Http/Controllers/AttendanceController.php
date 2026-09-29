@@ -11,17 +11,14 @@ use Illuminate\Support\Facades\Auth;
 class AttendanceController extends Controller
 {
     /**
-     * Siswa mengunggah foto bukti piket untuk diverifikasi oleh PJ / Pembimbing.
+     * Siswa mengunggah foto bukti piket untuk diverifikasi oleh PJ atau Admin/Pembimbing.
      */
     public function submitProof(Request $request, DutyMember $dutyMember): RedirectResponse
     {
         $user = Auth::user();
         $isSelf = $dutyMember->user_id === $user->id;
         $isAdmin = $user->role === 'admin';
-        $isPj = $dutyMember->schedule->dutyMembers()
-            ->where('user_id', $user->id)
-            ->where('is_pj', true)
-            ->exists();
+        $isPj = $dutyMember->schedule->isPj($user->id);
 
         if (! $isSelf && ! $isAdmin && ! $isPj) {
             abort(403, 'Anda tidak berhak mengunggah bukti untuk anggota lain.');
@@ -52,16 +49,13 @@ class AttendanceController extends Controller
     }
 
     /**
-     * PJ Piket atau Pembimbing Rayon memverifikasi bukti piket (Setujui / Tolak).
+     * PJ Piket atau Pembimbing Rayon memverifikasi bukti piket (Setujui atau Tolak).
      */
     public function verify(Request $request, DutyMember $dutyMember): RedirectResponse
     {
         $user = Auth::user();
         $isAdmin = $user->role === 'admin';
-        $isPj = $dutyMember->schedule->dutyMembers()
-            ->where('user_id', $user->id)
-            ->where('is_pj', true)
-            ->exists();
+        $isPj = $dutyMember->schedule->isPj($user->id);
 
         if (! $isAdmin && ! $isPj) {
             abort(403, 'Hanya Penanggung Jawab (PJ) piket atau Pembimbing yang berhak memverifikasi.');
@@ -72,40 +66,32 @@ class AttendanceController extends Controller
         ]);
 
         $lastAttendance = $dutyMember->latestAttendance;
+        $isApprove = $validated['action'] === 'approve';
 
-        if ($validated['action'] === 'approve') {
-            Attendance::updateOrCreate(
-                ['duty_member_id' => $dutyMember->id],
-                [
-                    'status' => 'hadir',
-                    'proof_image' => $lastAttendance?->proof_image,
-                    'proof_note' => $lastAttendance?->proof_note,
-                    'verified_by' => $user->id,
-                    'verified_at' => now(),
-                    'recorded_at' => now(),
-                ]
-            );
-
-            return back()->with('success', "Bukti piket {$dutyMember->user->name} disetujui! Status berhasil dicatat sebagai HADIR.");
-        }
-
+        // Pertahankan recorded_at siswa, catat verified_at sekarang
         Attendance::updateOrCreate(
             ['duty_member_id' => $dutyMember->id],
             [
-                'status' => 'alpa',
+                'status' => $isApprove ? 'hadir' : 'alpa',
                 'proof_image' => $lastAttendance?->proof_image,
-                'proof_note' => 'Ditolak: hasil piket belum bersih atau tidak sesuai standar.',
+                'proof_note' => $isApprove
+                    ? ($lastAttendance?->proof_note ?? 'Tugas piket selesai dilaksanakan.')
+                    : 'Ditolak: hasil piket belum bersih atau tidak sesuai standar.',
                 'verified_by' => $user->id,
                 'verified_at' => now(),
-                'recorded_at' => now(),
+                'recorded_at' => $lastAttendance?->recorded_at ?? now(),
             ]
         );
+
+        if ($isApprove) {
+            return back()->with('success', "Bukti piket {$dutyMember->user->name} disetujui! Status berhasil dicatat sebagai HADIR.");
+        }
 
         return back()->with('error', "Piket {$dutyMember->user->name} ditolak / belum bersih! Status diubah menjadi ALPA (Denda Rp 5.000).");
     }
 
     /**
-     * Manual update status kehadiran oleh Admin / Pembimbing.
+     * Update manual status kehadiran oleh Admin / Pembimbing.
      */
     public function update(Request $request, DutyMember $dutyMember): RedirectResponse
     {
@@ -123,7 +109,7 @@ class AttendanceController extends Controller
                 'proof_note' => $lastAttendance?->proof_note,
                 'verified_by' => Auth::id(),
                 'verified_at' => now(),
-                'recorded_at' => now(),
+                'recorded_at' => $lastAttendance?->recorded_at ?? now(),
             ]
         );
 

@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * Tampilkan halaman login utama (satu gerbang login untuk Admin & Siswa).
      */
     public function create(): View
     {
@@ -20,7 +20,9 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Proses autentikasi login terpadu.
+     * Jika admin login -> otomatis diarahkan ke Admin Panel (/admin).
+     * Jika siswa login -> diarahkan ke Dashboard Siswa (/dashboard).
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -28,11 +30,17 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $user = Auth::user();
+
+        if ($user && $user->role === 'admin') {
+            return redirect()->intended(url('/admin'));
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**
-     * Destroy an authenticated session.
+     * Logout dari sistem untuk semua role.
      */
     public function destroy(Request $request): RedirectResponse
     {
