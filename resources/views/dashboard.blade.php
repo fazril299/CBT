@@ -29,12 +29,12 @@
 
             <div class="flex items-center gap-2 shrink-0">
                 @if($isAdmin)
-                    <a href="{{ route('schedules.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#2F2E2B] hover:bg-[#191919] text-white text-xs font-medium transition-colors">
+                    <a href="{{ route('schedules.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#2383e2] hover:bg-[#1a73ca] text-white text-xs font-medium transition-colors">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                         <span>Buat Jadwal Baru</span>
                     </a>
                 @elseif($myNextSchedule)
-                    <a href="{{ route('schedules.show', $myNextSchedule->id) }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#2F2E2B] hover:bg-[#191919] text-white text-xs font-medium transition-colors">
+                    <a href="{{ route('schedules.show', $myNextSchedule->id) }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#2383e2] hover:bg-[#1a73ca] text-white text-xs font-medium transition-colors">
                         <span>Lihat Tugas Saya</span>
                     </a>
                 @endif
@@ -219,3 +219,4 @@
         </div>
     </div>
 </x-app-layout>
+

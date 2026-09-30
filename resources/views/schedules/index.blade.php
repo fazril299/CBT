@@ -39,7 +39,7 @@
                 </div>
 
                 @if(Auth::user()->role === 'admin')
-                    <a href="{{ route('schedules.create') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#2F2E2B] hover:bg-[#191919] text-white text-xs font-medium transition-colors">
+                    <a href="{{ route('schedules.create') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#2383e2] hover:bg-[#1a73ca] text-white text-xs font-medium transition-colors">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                         <span>Buat Jadwal</span>
                     </a>
@@ -141,7 +141,7 @@
                     <!-- Footer Action -->
                     <div class="pt-3 border-t border-[#EBEBEA] flex items-center justify-between">
                         <span class="text-[11px] text-[#9B9A97]">Verifikasi &amp; Absensi</span>
-                        <a href="{{ route('schedules.show', $schedule->id) }}" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-[#2F2E2B] hover:bg-[#191919] text-white text-xs font-medium transition-colors">
+                        <a href="{{ route('schedules.show', $schedule->id) }}" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-[#2383e2] hover:bg-[#1a73ca] text-white text-xs font-medium transition-colors">
                             <span>Buka Detail</span>
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
                         </a>
@@ -155,3 +155,4 @@
         </div>
     </div>
 </x-app-layout>
+
