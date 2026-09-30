@@ -153,23 +153,36 @@ class AdminPanelProvider extends PanelProvider
                         font-size: 0.875rem !important;
                     }
 
-                    /* Notion Buttons (Notion Blue #2383e2) */
+                    /* Notion Buttons (Exact match to Notion "New page") */
                     .fi-btn-color-primary,
                     a.fi-btn-color-primary,
-                    button.fi-btn-color-primary {
-                        background-color: var(--notion-blue) !important;
-                        color: #ffffff !important;
-                        border-radius: 6px !important;
-                        font-weight: 500 !important;
-                        box-shadow: none !important;
+                    button.fi-btn-color-primary,
+                    .fi-ac-action.fi-btn-color-primary {
+                        background-color: #2383e2 !important;
+                        background: #2383e2 !important;
                         border: none !important;
-                        transition: background-color 0.15s ease !important;
+                        border-radius: 6px !important;
+                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+                        padding: 6px 14px !important;
+                        transition: background-color 0.12s ease !important;
                     }
 
                     .fi-btn-color-primary:hover,
                     a.fi-btn-color-primary:hover,
                     button.fi-btn-color-primary:hover {
-                        background-color: var(--notion-blue-hover) !important;
+                        background-color: #1a73ca !important;
+                        background: #1a73ca !important;
+                    }
+
+                    /* Paksa semua teks & ikon di dalam tombol menjadi PUTIH BERSIH persis Notion */
+                    .fi-btn-color-primary *,
+                    .fi-btn-color-primary .fi-btn-label,
+                    .fi-btn-color-primary span,
+                    .fi-btn-color-primary svg {
+                        color: #ffffff !important;
+                        fill: #ffffff !important;
+                        font-weight: 500 !important;
+                        letter-spacing: -0.01em !important;
                     }
 
                     /* Search & Inputs */
@@ -221,5 +234,6 @@ class AdminPanelProvider extends PanelProvider
             ]);
     }
 }
+
 
 
