@@ -80,13 +80,9 @@
                 </form>
 
 
-                {{-- Sign up link --}}
+                {{-- Info pembuatan akun oleh Admin/Pembimbing --}}
                 <p class="text-center text-[11px] text-neutral-400 mt-5">
-                    Don't have an account?
-                    <a href="{{ route('register') }}"
-                       class="text-[#217C5B] font-semibold hover:underline ml-0.5">
-                        Sign up
-                    </a>
+                    Belum punya akun? Hubungi <span class="text-[#217C5B] font-medium">Pembimbing Rayon</span>
                 </p>
 
             </div>
@@ -94,3 +90,4 @@
 
     </div>
 </x-guest-layout>
+
