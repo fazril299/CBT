@@ -83,20 +83,27 @@ class DutyMember extends Model
      */
     public function getEffectiveStatusAttribute(): string
     {
+        // 1. Ambil data absen terakhir milik siswa ini dari database
         $attendance = $this->latestAttendance ?? $this->attendances->first();
 
+        // 2. Kalau siswanya sudah pernah klik tombol absen, 
+        // maka tampilkan statusnya (misal: 'hadir', 'izin', atau 'sakit')
         if ($attendance) {
             return $attendance->status;
         }
 
+        // 3. Kalau jadwalnya masih BESOK atau MINGGU DEPAN, berarti belum waktunya absen
         if ($this->isScheduleInFuture()) {
             return 'belum_waktunya';
         }
 
+        // 4. Kalau jadwal piketnya adalah HARI INI, berarti statusnya sedang 'belum_absen'
         if ($this->isTodaySchedulePending()) {
             return 'belum_absen';
         }
 
+        // 5. Kalau jadwalnya HARI KEMARIN dan siswa sama sekali tidak ngirim absen (melewati tahap 2)
+        // Maka sistem otomatis memvonis siswa tersebut menjadi ALPA
         return 'alpa';
     }
 
@@ -117,3 +124,4 @@ class DutyMember extends Model
         };
     }
 }
+

@@ -26,14 +26,18 @@ class DashboardController extends Controller
         $completedSchedules = Schedule::where('status', 'selesai')->count();
         $pendingActivities = Activity::where('status', false)->count();
 
-        // Cari jadwal giliran terdekat khusus siswa yang sedang login
+        // MENCARI JADWAL PIKET UNTUK SISWA YANG SEDANG LOGIN (Bagian Penting)
+        // 1. Buka tabel Jadwal (Schedule)
+        // 2. Cari jadwal di mana anggotanya (dutyMembers) ada ID siswa yang sedang login saat ini
+        // 3. Pastikan tanggal jadwalnya hari ini atau ke depannya (>= hari ini)
+        // 4. Urutkan dari yang terdekat (asc) lalu ambil jadwal pertama saja (first)
         $myNextSchedule = Schedule::with('dutyMembers.user')
             ->whereHas('dutyMembers', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
+                $query->where('user_id', $user->id); // Filter ID siswa yang login
             })
-            ->where('date', '>=', now()->toDateString())
+            ->where('date', '>=', now()->toDateString()) // Filter tanggal
             ->orderBy('date', 'asc')
-            ->first();
+            ->first(); // Ambil 1 jadwal terdekat
 
         // 6 jadwal aktif terdekat untuk monitoring
         $recentSchedules = Schedule::with('dutyMembers.user')
@@ -61,3 +65,4 @@ class DashboardController extends Controller
         ));
     }
 }
+
