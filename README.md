@@ -1,58 +1,77 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Informasi & Absensi Piket Digital
+### Rayon Cisarua 5 — SMK Wikrama Bogor (TP 2026/2027)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web modern berbasis **Laravel 11** dan **Filament v3** yang dirancang untuk mengelola penjadwalan piket, pelaporan bukti kebersihan fisik kelas/toilet secara digital, sistem verifikasi berjenjang oleh Penanggung Jawab (PJ), serta otomatisasi denda keterlambatan (Alpa).
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 👨‍💻 Pengembang
+* **Nama:** Mochammad Fazriel Muliawan
+* **Rayon:** Cisarua 5
+* **Sekolah:** SMK Wikrama Bogor
+* **GitHub:** [@fazril299](https://github.com/fazril299)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Fitur Unggulan Sistem
 
-## Learning Laravel
+1. **Autentikasi Terpusat & Aman**
+   * Login terpadu untuk Siswa dan Pembimbing Rayon (Admin).
+   * Pendaftaran akun terpusat oleh Admin demi integritas data rayon.
+2. **Manajemen Penjadwalan 1 Minggu (Senin – Jumat)**
+   * Pemetaan 34 siswa ke dalam jadwal harian.
+   * Pembagian tugas ganda: **Piket Rayon (Ruang Kelas)** dan **Piket WC (Sanitasi)**.
+3. **Penunjukan Penanggung Jawab (PJ) Otomatis**
+   * Setiap hari memiliki 1 orang PJ yang bertindak sebagai koordinator lapangan.
+4. **Pelaporan Digital dengan Bukti Foto**
+   * Siswa wajib mengunggah foto fisik kebersihan ruangan sebelum giliran piket dinyatakan selesai.
+5. **Verifikasi Berjenjang oleh PJ**
+   * Laporan foto bukti siswa diperiksa dan di-ACC langsung oleh PJ hari terkait sebelum status kehadiran disahkan.
+6. **Smart Automation: Vonis Alpa & Denda Otomatis**
+   * Sistem secara otomatis mendeteksi pergantian hari kalender. Jika siswa tidak melaksanakan piket pada hari gilirannya, sistem langsung mengubah status menjadi **Alpa (Denda Rp 5.000)**.
+7. **Admin Panel Notion Minimalist**
+   * Panel admin intuitif berbasis Filament v3 dengan palet warna bersih ala Notion untuk mengelola jadwal, master siswa, dan rekapitulasi laporan piket.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Tech Stack
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+* **Backend Framework:** Laravel 11 (PHP 8.3+)
+* **Admin Dashboard:** Filament PHP v3
+* **Frontend UI:** Blade, Livewire, Tailwind CSS
+* **Database:** MySQL
+* **Local Development Environment:** Laragon / PHP Built-in Server
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 📦 Panduan Instalasi Lokal
+
+Jika ingin menjalankan proyek ini di komputer lokal:
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clone repositori
+git clone https://github.com/fazril299/CBT.git
+cd CBT
 
-php artisan boost:install
+# 2. Instal dependensi PHP & JavaScript
+composer install
+npm install
+
+# 3. Konfigurasi Environment (.env)
+cp .env.example .env
+php artisan key:generate
+
+# 4. Migrasi Database beserta Data Seeder Awal
+php artisan migrate --seed
+
+# 5. Build Aset Frontend
+npm run build
+
+# 6. Jalankan Server Lokal
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📄 Lisensi & Hak Cipta
+Dikembangkan untuk keperluan operasional pembinaan kesiswaan Rayon Cisarua 5 SMK Wikrama Bogor.
