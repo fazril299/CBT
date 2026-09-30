@@ -1,77 +1,32 @@
-# Sistem Informasi & Absensi Piket Digital
-### Rayon Cisarua 5 — SMK Wikrama Bogor (TP 2026/2027)
+# Dokumentasi Proyek Jadwal Piket
 
-Aplikasi web modern berbasis **Laravel 11** dan **Filament v3** yang dirancang untuk mengelola penjadwalan piket, pelaporan bukti kebersihan fisik kelas/toilet secara digital, sistem verifikasi berjenjang oleh Penanggung Jawab (PJ), serta otomatisasi denda keterlambatan (Alpa).
+## 1. Ringkasan Proyek
 
----
+### Nama Proyek
 
-## 👨‍💻 Pengembang
-* **Nama:** Mochammad Fazriel Muliawan
-* **Rayon:** Cisarua 5
-* **Sekolah:** SMK Wikrama Bogor
-* **GitHub:** [@fazril299](https://github.com/fazril299)
+**Jadwal Piket**
 
----
+Aplikasi untuk mengatur, menampilkan, dan memantau jadwal piket siswa secara terstruktur.
 
-## 🚀 Fitur Unggulan Sistem
+### Fitur Utama
 
-1. **Autentikasi Terpusat & Aman**
-   * Login terpadu untuk Siswa dan Pembimbing Rayon (Admin).
-   * Pendaftaran akun terpusat oleh Admin demi integritas data rayon.
-2. **Manajemen Penjadwalan 1 Minggu (Senin – Jumat)**
-   * Pemetaan 34 siswa ke dalam jadwal harian.
-   * Pembagian tugas ganda: **Piket Rayon (Ruang Kelas)** dan **Piket WC (Sanitasi)**.
-3. **Penunjukan Penanggung Jawab (PJ) Otomatis**
-   * Setiap hari memiliki 1 orang PJ yang bertindak sebagai koordinator lapangan.
-4. **Pelaporan Digital dengan Bukti Foto**
-   * Siswa wajib mengunggah foto fisik kebersihan ruangan sebelum giliran piket dinyatakan selesai.
-5. **Verifikasi Berjenjang oleh PJ**
-   * Laporan foto bukti siswa diperiksa dan di-ACC langsung oleh PJ hari terkait sebelum status kehadiran disahkan.
-6. **Smart Automation: Vonis Alpa & Denda Otomatis**
-   * Sistem secara otomatis mendeteksi pergantian hari kalender. Jika siswa tidak melaksanakan piket pada hari gilirannya, sistem langsung mengubah status menjadi **Alpa (Denda Rp 5.000)**.
-7. **Admin Panel Notion Minimalist**
-   * Panel admin intuitif berbasis Filament v3 dengan palet warna bersih ala Notion untuk mengelola jadwal, master siswa, dan rekapitulasi laporan piket.
+- Login menggunakan akun pengguna.
+- Menampilkan jadwal piket berdasarkan hari.
+- Menampilkan anggota yang bertugas.
+- Menampilkan status piket: belum dilakukan, sedang berlangsung, atau selesai.
+- Memungkinkan admin mengatur jadwal dan anggota piket.
+- Memungkinkan pengguna melihat jadwal piket pribadi.
 
----
+## 2. Latar Belakang dan Rumusan Masalah
 
-## 🛠️ Tech Stack
+Pencatatan jadwal piket secara manual dapat menyebabkan informasi sulit ditemukan dan jadwal mudah terlewat. Siswa juga dapat mengalami kesulitan untuk mengetahui siapa saja yang bertugas pada hari tertentu.
 
-* **Backend Framework:** Laravel 11 (PHP 8.3+)
-* **Admin Dashboard:** Filament PHP v3
-* **Frontend UI:** Blade, Livewire, Tailwind CSS
-* **Database:** MySQL
-* **Local Development Environment:** Laragon / PHP Built-in Server
+Aplikasi Jadwal Piket dibuat untuk menyediakan informasi jadwal secara terpusat. Dengan demikian, siswa dapat mengetahui tugas piket dengan lebih mudah, sedangkan admin dapat mengelola jadwal secara terstruktur.
 
----
+## 3. Tujuan
 
-## 📦 Panduan Instalasi Lokal
-
-Jika ingin menjalankan proyek ini di komputer lokal:
-
-```bash
-# 1. Clone repositori
-git clone https://github.com/fazril299/CBT.git
-cd CBT
-
-# 2. Instal dependensi PHP & JavaScript
-composer install
-npm install
-
-# 3. Konfigurasi Environment (.env)
-cp .env.example .env
-php artisan key:generate
-
-# 4. Migrasi Database beserta Data Seeder Awal
-php artisan migrate --seed
-
-# 5. Build Aset Frontend
-npm run build
-
-# 6. Jalankan Server Lokal
-php artisan serve
-```
-
----
-
-## 📄 Lisensi & Hak Cipta
-Dikembangkan untuk keperluan operasional pembinaan kesiswaan Rayon Cisarua 5 SMK Wikrama Bogor.
+- Membuat sistem jadwal piket yang mudah digunakan.
+- Memudahkan siswa melihat jadwal dan tugas piket.
+- Memudahkan admin mengatur anggota dan jadwal.
+- Mengurangi kesalahan dalam pencatatan jadwal.
+- Menyediakan informasi piket secara terpusat.
