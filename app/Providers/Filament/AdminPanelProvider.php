@@ -29,187 +29,129 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('Admin Piket')
             ->font('Inter')
             ->colors([
-                'primary' => '#2383e2', // Warna Biru Notion
+                'primary' => Color::Blue,
                 'gray' => Color::Zinc,
             ])
-                        ->renderHook(
-                \Filament\View\PanelsRenderHook::HEAD_END,
+            ->renderHook(
+                'panels::sidebar.footer',
                 fn (): string => '
-                <style>
-                    /* Notion Palette & Aesthetic */
-                    :root {
-                        --notion-bg: #ffffff;
-                        --notion-sidebar: #f7f7f5;
-                        --notion-text: #37352f;
-                        --notion-text-muted: rgba(55, 53, 47, 0.65);
-                        --notion-border: #edece9;
-                        --notion-border-light: rgba(55, 53, 47, 0.09);
-                        --notion-hover: rgba(55, 53, 47, 0.05);
-                        --notion-active: rgba(55, 53, 47, 0.08);
-                        --notion-blue: #2383e2;
-                        --notion-blue-hover: #1d70c2;
-                    }
+                    <div style="padding: 1rem; text-align: center;">
+                        <a href="'.url('/dashboard').'" style="display: inline-block; padding: 0.35rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.75rem; color: #4b5563; background: #e5e7eb; border-radius: 0.375rem; text-decoration: none; font-weight: 600;">? Ke Dashboard Piket</a>
+                        <img src="'.asset('images/admin_hero.png').'" alt="Admin" style="width: 100%; max-width: 180px; height: auto; margin: 0 auto; display: block; opacity: 0.9;">
+                    </div>
+                    <style>
+                        /* Notion Global Styles */
+                        body, .fi-body {
+                            background-color: #ffffff !important;
+                            color: #37352f !important;
+                            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+                        }
 
-                    body, .fi-body {
-                        background-color: var(--notion-bg) !important;
-                        color: var(--notion-text) !important;
-                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif !important;
-                    }
+                        /* Notion Sidebar (Off-white #f7f7f5) */
+                        aside.fi-sidebar, .fi-sidebar {
+                            background-color: #f7f7f5 !important;
+                            border-right: 1px solid #edece9 !important;
+                            box-shadow: none !important;
+                        }
 
-                    /* Notion Sidebar (Off-white warm gray #f7f7f5) */
-                    aside.fi-sidebar, .fi-sidebar {
-                        background-color: var(--notion-sidebar) !important;
-                        border-right: 1px solid var(--notion-border) !important;
-                        box-shadow: none !important;
-                    }
+                        .fi-sidebar-header a, .fi-sidebar-header span {
+                            color: #37352f !important;
+                            font-weight: 700 !important;
+                        }
 
-                    .fi-sidebar-header {
-                        border-bottom: 1px solid transparent !important;
-                        padding-top: 1.25rem !important;
-                        padding-bottom: 0.75rem !important;
-                    }
+                        .fi-sidebar-item-btn {
+                            border-radius: 6px !important;
+                            color: #37352f !important;
+                            margin: 2px 8px !important;
+                            padding: 6px 10px !important;
+                            font-weight: 500 !important;
+                        }
 
-                    .fi-sidebar-header a, .fi-sidebar-header span {
-                        color: var(--notion-text) !important;
-                        font-weight: 700 !important;
-                        letter-spacing: -0.02em !important;
-                        font-size: 1rem !important;
-                    }
+                        .fi-sidebar-item-btn:hover {
+                            background-color: rgba(55, 53, 47, 0.05) !important;
+                        }
 
-                    /* Sidebar Navigation Items */
-                    .fi-sidebar-item-btn {
-                        border-radius: 6px !important;
-                        color: var(--notion-text) !important;
-                        transition: background-color 0.1s ease, color 0.1s ease !important;
-                        margin: 2px 8px !important;
-                        padding: 6px 10px !important;
-                        font-weight: 500 !important;
-                        font-size: 0.875rem !important;
-                    }
+                        .fi-sidebar-item-active .fi-sidebar-item-btn,
+                        .fi-sidebar-item-btn.fi-active {
+                            background-color: rgba(55, 53, 47, 0.08) !important;
+                            color: #37352f !important;
+                            font-weight: 600 !important;
+                        }
 
-                    .fi-sidebar-item-btn:hover {
-                        background-color: var(--notion-hover) !important;
-                        color: var(--notion-text) !important;
-                    }
+                        /* TOMBOL PERSIS NOTION "New page" (Biru Solid + Teks PUTIH) */
+                        .fi-btn-color-primary,
+                        button.fi-btn-color-primary,
+                        a.fi-btn-color-primary,
+                        .fi-header-actions .fi-btn,
+                        .fi-header-actions button,
+                        .fi-header-actions a {
+                            background-color: #2383e2 !important;
+                            background: #2383e2 !important;
+                            border-radius: 6px !important;
+                            border: none !important;
+                            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) !important;
+                            padding: 6px 14px !important;
+                        }
 
-                    .fi-sidebar-item-active .fi-sidebar-item-btn,
-                    .fi-sidebar-item-btn.fi-active {
-                        background-color: var(--notion-active) !important;
-                        color: var(--notion-text) !important;
-                        font-weight: 600 !important;
-                    }
+                        .fi-btn-color-primary:hover,
+                        .fi-header-actions .fi-btn:hover {
+                            background-color: #1a73ca !important;
+                            background: #1a73ca !important;
+                        }
 
-                    .fi-sidebar-item-icon {
-                        color: var(--notion-text-muted) !important;
-                    }
+                        /* Paksa Teks dan Ikon Tombol Putih 100% */
+                        .fi-btn-color-primary *,
+                        .fi-btn-color-primary span,
+                        .fi-btn-color-primary .fi-btn-label,
+                        .fi-header-actions .fi-btn *,
+                        .fi-header-actions .fi-btn span,
+                        .fi-header-actions .fi-btn .fi-btn-label {
+                            color: #ffffff !important;
+                            fill: #ffffff !important;
+                            font-weight: 500 !important;
+                            font-size: 14px !important;
+                        }
 
-                    .fi-sidebar-item-active .fi-sidebar-item-icon {
-                        color: var(--notion-text) !important;
-                    }
+                        /* Notion Tables */
+                        .fi-ta-ctn {
+                            background-color: #ffffff !important;
+                            border: 1px solid #edece9 !important;
+                            border-radius: 8px !important;
+                            box-shadow: none !important;
+                        }
 
-                    /* Main Page Content Area */
-                    main.fi-main, .fi-main {
-                        background-color: var(--notion-bg) !important;
-                    }
+                        .fi-ta-header-cell {
+                            background-color: #fbfbfa !important;
+                            color: rgba(55, 53, 47, 0.65) !important;
+                            font-weight: 500 !important;
+                            border-bottom: 1px solid #edece9 !important;
+                        }
 
-                    /* Notion Headings */
-                    h1, .fi-header-heading {
-                        color: var(--notion-text) !important;
-                        font-weight: 700 !important;
-                        letter-spacing: -0.03em !important;
-                    }
+                        .fi-ta-row {
+                            border-bottom: 1px solid rgba(55, 53, 47, 0.09) !important;
+                        }
 
-                    /* Notion Table Container */
-                    .fi-ta-ctn {
-                        background-color: var(--notion-bg) !important;
-                        border: 1px solid var(--notion-border) !important;
-                        border-radius: 8px !important;
-                        box-shadow: none !important;
-                        overflow: hidden !important;
-                    }
+                        .fi-ta-row:hover {
+                            background-color: rgba(55, 53, 47, 0.025) !important;
+                        }
 
-                    /* Notion Table Header */
-                    .fi-ta-header-cell {
-                        background-color: #fbfbfa !important;
-                        color: var(--notion-text-muted) !important;
-                        font-weight: 500 !important;
-                        font-size: 0.775rem !important;
-                        border-bottom: 1px solid var(--notion-border) !important;
-                        text-transform: capitalize !important;
-                    }
+                        .fi-ta-cell, .fi-ta-text-item-label {
+                            color: #37352f !important;
+                        }
 
-                    /* Notion Table Rows */
-                    .fi-ta-row {
-                        border-bottom: 1px solid var(--notion-border-light) !important;
-                        transition: background-color 0.1s ease !important;
-                    }
+                        /* Search & Inputs */
+                        .fi-input-wrp {
+                            background-color: #ffffff !important;
+                            border: 1px solid #edece9 !important;
+                            border-radius: 6px !important;
+                            box-shadow: none !important;
+                        }
 
-                    .fi-ta-row:hover {
-                        background-color: rgba(55, 53, 47, 0.025) !important;
-                    }
-
-                    .fi-ta-cell, .fi-ta-text-item-label {
-                        color: var(--notion-text) !important;
-                        font-size: 0.875rem !important;
-                    }
-
-                    /* Notion Buttons (Exact match to Notion "New page") */
-                    .fi-btn-color-primary,
-                    a.fi-btn-color-primary,
-                    button.fi-btn-color-primary,
-                    .fi-ac-action.fi-btn-color-primary {
-                        background-color: #2383e2 !important;
-                        background: #2383e2 !important;
-                        border: none !important;
-                        border-radius: 6px !important;
-                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
-                        padding: 6px 14px !important;
-                        transition: background-color 0.12s ease !important;
-                    }
-
-                    .fi-btn-color-primary:hover,
-                    a.fi-btn-color-primary:hover,
-                    button.fi-btn-color-primary:hover {
-                        background-color: #1a73ca !important;
-                        background: #1a73ca !important;
-                    }
-
-                    /* Paksa semua teks & ikon di dalam tombol menjadi PUTIH BERSIH persis Notion */
-                    .fi-btn-color-primary *,
-                    .fi-btn-color-primary .fi-btn-label,
-                    .fi-btn-color-primary span,
-                    .fi-btn-color-primary svg {
-                        color: #ffffff !important;
-                        fill: #ffffff !important;
-                        font-weight: 500 !important;
-                        letter-spacing: -0.01em !important;
-                    }
-
-                    /* Search & Inputs */
-                    .fi-input-wrp {
-                        background-color: var(--notion-bg) !important;
-                        border: 1px solid var(--notion-border) !important;
-                        border-radius: 6px !important;
-                        box-shadow: none !important;
-                    }
-
-                    .fi-input-wrp:focus-within {
-                        border-color: var(--notion-blue) !important;
-                        box-shadow: 0 0 0 2px rgba(35, 131, 226, 0.2) !important;
-                    }
-
-                    /* Badges Notion Style */
-                    .fi-badge {
-                        border-radius: 4px !important;
-                        font-weight: 500 !important;
-                        font-size: 0.75rem !important;
-                        padding: 2px 6px !important;
-                    }
-                </style>
+                        .fi-sidebar-user-menu, .fi-sidebar-user {
+                            display: none !important;
+                        }
+                    </style>
                 '
-            )
-            ->renderHook('panels::sidebar.footer',
-                fn (): string => '<div style="padding: 1rem; text-align: center;"><a href="'.url('/dashboard').'" style="display: inline-block; padding: 0.35rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.75rem; color: #4b5563; background: #e5e7eb; border-radius: 0.375rem; text-decoration: none; font-weight: 600;">← Ke Dashboard Piket</a><img src="'.asset('images/admin_hero.png').'" alt="Admin" style="width: 100%; max-width: 180px; height: auto; margin: 0 auto; display: block; opacity: 0.9;"></div><style>.fi-sidebar-user-menu, .fi-sidebar-user { display: none !important; }</style>'
             )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -234,6 +176,3 @@ class AdminPanelProvider extends PanelProvider
             ]);
     }
 }
-
-
-
