@@ -197,27 +197,10 @@
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <!-- Search Bar with shortcut key -->
-                    <div class="relative flex items-center">
-                        <svg class="w-3.5 h-3.5 text-[#9B9A97] absolute left-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
-                        </svg>
-                        <input type="text" placeholder="Cari..." 
-                               class="pl-8 pr-7 py-1 rounded-md border border-[#EBEBEA] text-xs bg-[#F7F7F5] w-40 focus:w-56 focus:bg-white focus:border-[#37352F] focus:ring-0 transition-all text-[#37352F] placeholder-[#9B9A97]" />
-                        <span class="absolute right-2 text-[10px] text-[#9B9A97] border border-[#EBEBEA] rounded px-1 bg-white font-mono">/</span>
-                    </div>
-
                     <span class="text-xs text-[#787774] hidden lg:inline">
                         {{ now()->translatedFormat('l, d F Y') }}
                     </span>
 
-                    @if(Auth::user()->role === 'admin')
-                        <!-- Primary Action Button: Notion Black Button -->
-                        <a href="{{ route('schedules.create') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#2383e2] hover:bg-[#1a73ca] text-white text-xs font-medium transition-colors shadow-none">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                            <span>Buat Jadwal</span>
-                        </a>
-                    @endif
                 </div>
             </div>
 

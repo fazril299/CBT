@@ -21,6 +21,10 @@ class ScheduleResource extends Resource
     protected static ?int $navigationSort = 1;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
+    
+    protected static ?string $modelLabel = 'Jadwal';
+    protected static ?string $pluralModelLabel = 'Jadwal Piket';
+    protected static ?string $navigationLabel = 'Jadwal Piket';
 
     public static function form(Schema $schema): Schema
     {

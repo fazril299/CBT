@@ -15,12 +15,14 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('Nama')
                     ->searchable()
                     ->weight('medium'),
                 TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),
                 TextColumn::make('role')
+                    ->label('Peran')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->color(fn (string $state): string => match ($state) {

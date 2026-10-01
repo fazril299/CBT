@@ -36,17 +36,9 @@
             <!-- Admin Actions -->
             @if(Auth::user()->role === 'admin')
                 <div class="flex items-center gap-2 shrink-0">
-                    <a href="{{ route('schedules.edit', $schedule->id) }}" class="px-3.5 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-700 text-xs font-semibold transition-colors">
-                        Edit Jadwal
+                    <a href="{{ url('/admin/schedules/' . $schedule->id . '/edit') }}" class="px-3.5 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-700 text-xs font-semibold transition-colors">
+                        Kelola di Admin
                     </a>
-
-                    <form action="{{ route('schedules.destroy', $schedule->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal piket ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold transition-colors">
-                            Hapus
-                        </button>
-                    </form>
                 </div>
             @endif
         </div>
@@ -421,8 +413,23 @@
                             </button>
                         </form>
                     @else
-                        <div class="p-3 rounded-xl bg-neutral-50 border border-neutral-200 text-xs text-neutral-700 font-medium">
-                            Status saat ini: <strong class="capitalize">{{ str_replace('_', ' ', $schedule->status) }}</strong>
+                        @php
+                            $eff = $schedule->effective_status;
+                            $label = match($eff) {
+                                'selesai' => 'Selesai (Bersih)',
+                                'sedang_berlangsung' => 'Sedang Berlangsung',
+                                'tidak_terlaksana' => 'Tidak Terlaksana (Terlewat)',
+                                default => 'Belum Dilakukan'
+                            };
+                            $bg = match($eff) {
+                                'selesai' => 'bg-emerald-50 border-emerald-200 text-emerald-800',
+                                'sedang_berlangsung' => 'bg-amber-50 border-amber-200 text-amber-800',
+                                'tidak_terlaksana' => 'bg-rose-50 border-rose-200 text-rose-800',
+                                default => 'bg-neutral-50 border-neutral-200 text-neutral-700'
+                            };
+                        @endphp
+                        <div class="p-3 rounded-xl border text-xs font-medium {{ $bg }}">
+                            Status: <strong class="font-bold">{{ $label }}</strong>
                         </div>
                     @endif
                 </div>

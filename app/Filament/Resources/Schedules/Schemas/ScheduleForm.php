@@ -15,17 +15,23 @@ class ScheduleForm
         return $schema
             ->components([
                 Select::make('piket_type')
-                    ->options(['piket_wc' => 'Piket wc', 'piket_rayon' => 'Piket rayon'])
+                    ->label('Jenis Piket')
+                    ->options(['piket_wc' => 'Piket WC', 'piket_rayon' => 'Piket Rayon'])
                     ->default('piket_wc')
                     ->required(),
-                TextInput::make('location'),
+                TextInput::make('location')
+                    ->label('Lokasi'),
                 DatePicker::make('date')
+                    ->label('Tanggal')
                     ->required(),
                 TextInput::make('day')
+                    ->label('Hari')
                     ->required(),
                 TimePicker::make('time')
+                    ->label('Waktu')
                     ->required(),
                 Select::make('status')
+                    ->label('Status')
                     ->options([
             'belum_dilakukan' => 'Belum dilakukan',
             'sedang_berlangsung' => 'Sedang berlangsung',

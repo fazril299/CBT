@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Carbon\Carbon;
 
 class DutyMember extends Model
 {
@@ -44,66 +45,45 @@ class DutyMember extends Model
     }
 
     /**
-     * Cek apakah jadwal piket ini masih di masa mendatang (belum hari H).
-     */
-    public function isScheduleInFuture(): bool
-    {
-        $schedule = $this->schedule;
-
-        if (! $schedule || ! $schedule->date) {
-            return true;
-        }
-
-        return $schedule->date->startOfDay()->gt(now()->startOfDay());
-    }
-
-    /**
-     * Cek apakah jadwal piket adalah hari ini dan belum ditandai selesai.
-     */
-    public function isTodaySchedulePending(): bool
-    {
-        $schedule = $this->schedule;
-
-        if (! $schedule || ! $schedule->date) {
-            return false;
-        }
-
-        $scheduleDate = $schedule->date->startOfDay();
-        $today = now()->startOfDay();
-
-        return $scheduleDate->eq($today) && $schedule->status !== 'selesai';
-    }
-
-    /**
      * Menghitung status efektif kehadiran anggota secara dinamis:
-     * 1. Jika sudah ada data absensi -> gunakan status tersebut (hadir, menunggu_verifikasi, dsb).
-     * 2. Jika jadwal di masa depan -> 'belum_waktunya'.
-     * 3. Jika jadwal hari ini dan belum selesai -> 'belum_absen'.
-     * 4. Jika jadwal sudah lewat tanpa ada absen -> 'alpa'.
+     * 1. Jika sudah ada absen -> gunakan status tersebut.
+     * 2. Jika waktu SEKARANG belum melewati Jam & Hari jadwal -> 'belum_waktunya'.
+     * 3. Jika sudah melewati waktu (jam) tapi masih di hari yang sama -> 'belum_absen'.
+     * 4. Jika sudah berganti hari (besoknya) tanpa absen -> 'alpa'.
      */
     public function getEffectiveStatusAttribute(): string
     {
         // 1. Ambil data absen terakhir milik siswa ini dari database
         $attendance = $this->latestAttendance ?? $this->attendances->first();
 
-        // 2. Kalau siswanya sudah pernah klik tombol absen, 
-        // maka tampilkan statusnya (misal: 'hadir', 'izin', atau 'sakit')
         if ($attendance) {
             return $attendance->status;
         }
 
-        // 3. Kalau jadwalnya masih BESOK atau MINGGU DEPAN, berarti belum waktunya absen
-        if ($this->isScheduleInFuture()) {
+        $schedule = $this->schedule;
+
+        if (! $schedule || ! $schedule->date) {
             return 'belum_waktunya';
         }
 
-        // 4. Kalau jadwal piketnya adalah HARI INI, berarti statusnya sedang 'belum_absen'
-        if ($this->isTodaySchedulePending()) {
+        // Gabungkan tanggal dan waktu jadwal untuk perbandingan presisi
+        $timeString = $schedule->time ? $schedule->time : '00:00:00';
+        $scheduleDateTime = Carbon::parse($schedule->date->format('Y-m-d') . ' ' . $timeString);
+        $now = now();
+
+        // 2. Kalau sekarang masih SEBELUM jam piket (misal piket 15:30, sekarang 08:00 pagi)
+        // Maka statusnya masih 'belum_waktunya' (tidak boleh alpa atau denda)
+        if ($now->lt($scheduleDateTime)) {
+            return 'belum_waktunya';
+        }
+
+        // 3. Kalau sekarang SUDAH MELEWATI jam piket, TAPI MASIH DI HARI YANG SAMA
+        // (memberi kesempatan absen sampai tengah malam 23:59)
+        if ($now->isSameDay($scheduleDateTime)) {
             return 'belum_absen';
         }
 
-        // 5. Kalau jadwalnya HARI KEMARIN dan siswa sama sekali tidak ngirim absen (melewati tahap 2)
-        // Maka sistem otomatis memvonis siswa tersebut menjadi ALPA
+        // 4. Kalau sudah berganti hari (besoknya) dan siswa tidak absen sama sekali
         return 'alpa';
     }
 
@@ -113,7 +93,7 @@ class DutyMember extends Model
     public function getEffectiveStatusLabelAttribute(): string
     {
         return match ($this->effective_status) {
-            'hadir' => '✓ Hadir (Terverifikasi)',
+            'hadir' => 'Hadir (Terverifikasi)',
             'menunggu_verifikasi' => 'Menunggu Verifikasi PJ',
             'izin' => 'Izin',
             'sakit' => 'Sakit',
@@ -124,5 +104,3 @@ class DutyMember extends Model
         };
     }
 }
-
-

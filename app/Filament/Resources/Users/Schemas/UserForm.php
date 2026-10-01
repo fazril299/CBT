@@ -14,17 +14,21 @@ class UserForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Nama')
                     ->required(),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label('Email')
                     ->email()
                     ->required(),
-                DateTimePicker::make('email_verified_at'),
+                DateTimePicker::make('email_verified_at')
+                    ->label('Email Diverifikasi Pada'),
                 TextInput::make('password')
+                    ->label('Password (Kosongkan jika tidak diubah)')
                     ->password()
                     ->required(fn (string $operation): bool => $operation === 'create')
                     ->dehydrated(fn (?string $state): bool => filled($state)),
                 Select::make('role')
+                    ->label('Peran')
                     ->options(['admin' => 'Admin', 'siswa' => 'Siswa'])
                     ->default('siswa')
                     ->required(),

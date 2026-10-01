@@ -19,10 +19,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Schedules (CRUD for Admin, View for All)
-    Route::resource('schedules', ScheduleController::class);
+    Route::resource('schedules', ScheduleController::class)->only(['index', 'show']);
     Route::post('/schedules/{schedule}/status', [ScheduleController::class, 'updateStatus'])->name('schedules.status');
 
     // Duty Members (Assign/Remove members from schedule & Toggle PJ)

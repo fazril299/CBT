@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DutyMember;
 use App\Models\Schedule;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -75,96 +74,6 @@ class ScheduleController extends Controller
     }
 
     /**
-     * Tampilkan formulir pembuatan jadwal baru.
-     */
-    public function create(): View
-    {
-        $students = User::where('role', 'siswa')->orderBy('name')->get();
-
-        return view('schedules.create', compact('students'));
-    }
-
-    /**
-     * Simpan jadwal baru beserta anggota yang ditugaskan.
-     */
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'piket_type' => 'required|in:piket_wc,piket_rayon',
-            'location' => 'required|string|max:100',
-            'date' => 'required|date',
-            'day' => 'required|string',
-            'time' => 'required',
-            'user_ids' => 'required|array|min:1',
-            'user_ids.*' => 'exists:users,id',
-        ], [
-            'piket_type.required' => 'Pilih jenis piket (Piket WC atau Piket Rayon).',
-            'piket_type.in' => 'Jenis piket hanya boleh Piket WC atau Piket Rayon.',
-            'location.required' => 'Nama lokasi / area piket wajib diisi.',
-            'date.required' => 'Tanggal piket wajib diisi.',
-            'day.required' => 'Hari piket wajib dipilih.',
-            'time.required' => 'Waktu piket wajib diisi.',
-            'user_ids.required' => 'Anggota piket wajib dipilih minimal 1 orang.',
-            'user_ids.min' => 'Pilih minimal 1 orang anggota piket.',
-        ]);
-
-        $schedule = Schedule::create([
-            'piket_type' => $validated['piket_type'],
-            'location' => $validated['location'],
-            'date' => $validated['date'],
-            'day' => $validated['day'],
-            'time' => $validated['time'],
-            'status' => 'belum_dilakukan',
-        ]);
-
-        $pjUserId = $request->input('pj_user_id');
-
-        foreach ($validated['user_ids'] as $userId) {
-            DutyMember::create([
-                'schedule_id' => $schedule->id,
-                'user_id' => $userId,
-                'is_pj' => ($pjUserId && (int) $userId === (int) $pjUserId),
-            ]);
-        }
-
-        return redirect()->route('schedules.show', $schedule->id)
-            ->with('success', 'Jadwal '.$schedule->type_label.' dan anggota berhasil dibuat!');
-    }
-
-    /**
-     * Tampilkan formulir edit jadwal.
-     */
-    public function edit(Schedule $schedule): View
-    {
-        $students = User::where('role', 'siswa')->orderBy('name')->get();
-
-        return view('schedules.edit', compact('schedule', 'students'));
-    }
-
-    /**
-     * Perbarui data jadwal piket.
-     */
-    public function update(Request $request, Schedule $schedule): RedirectResponse
-    {
-        $validated = $request->validate([
-            'piket_type' => 'required|in:piket_wc,piket_rayon',
-            'location' => 'required|string|max:100',
-            'date' => 'required|date',
-            'day' => 'required|string',
-            'time' => 'required',
-            'status' => 'required|in:belum_dilakukan,sedang_berlangsung,selesai',
-        ], [
-            'piket_type.required' => 'Pilih jenis piket (Piket WC atau Piket Rayon).',
-            'location.required' => 'Nama lokasi / area piket wajib diisi.',
-        ]);
-
-        $schedule->update($validated);
-
-        return redirect()->route('schedules.show', $schedule->id)
-            ->with('success', 'Data jadwal '.$schedule->type_label.' berhasil diperbarui!');
-    }
-
-    /**
      * Perbarui status pelaksanaan jadwal (belum_dilakukan, sedang_berlangsung, selesai).
      */
     public function updateStatus(Request $request, Schedule $schedule): RedirectResponse
@@ -176,15 +85,5 @@ class ScheduleController extends Controller
         $schedule->update(['status' => $validated['status']]);
 
         return back()->with('success', 'Status jadwal berhasil diperbarui!');
-    }
-
-    /**
-     * Hapus jadwal piket beserta relasinya.
-     */
-    public function destroy(Schedule $schedule): RedirectResponse
-    {
-        $schedule->delete();
-
-        return redirect()->route('schedules.index')->with('success', 'Jadwal piket berhasil dihapus!');
     }
 }

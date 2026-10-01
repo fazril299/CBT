@@ -19,6 +19,10 @@ class ActivityResource extends Resource
     protected static ?string $model = Activity::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCheckCircle;
+    
+    protected static ?string $modelLabel = 'Tugas';
+    protected static ?string $pluralModelLabel = 'Tugas & Aktivitas';
+    protected static ?string $navigationLabel = 'Tugas & Aktivitas';
 
     public static function form(Schema $schema): Schema
     {

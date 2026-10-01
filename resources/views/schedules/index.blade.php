@@ -37,13 +37,6 @@
                         @endif
                     </a>
                 </div>
-
-                @if(Auth::user()->role === 'admin')
-                    <a href="{{ route('schedules.create') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#2383e2] hover:bg-[#1a73ca] text-white text-xs font-medium transition-colors">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                        <span>Buat Jadwal</span>
-                    </a>
-                @endif
             </div>
         </div>
 
@@ -92,15 +85,24 @@
                             </div>
 
                             <div>
-                                @if($schedule->status === 'selesai')
+                                @php
+                                    $effectiveStatus = $schedule->effective_status;
+                                @endphp
+
+                                @if($effectiveStatus === 'selesai')
                                     <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
                                         <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                                         <span>Selesai</span>
                                     </span>
-                                @elseif($schedule->status === 'sedang_berlangsung')
+                                @elseif($effectiveStatus === 'sedang_berlangsung')
                                     <span class="inline-flex items-center gap-1.5 text-xs font-medium text-amber-600">
                                         <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                                         <span>Berlangsung</span>
+                                    </span>
+                                @elseif($effectiveStatus === 'tidak_terlaksana')
+                                    <span class="inline-flex items-center gap-1.5 text-xs font-medium text-rose-600">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                        <span>Terlewat</span>
                                     </span>
                                 @else
                                     <span class="text-xs font-medium text-[#9B9A97]">

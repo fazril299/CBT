@@ -29,9 +29,9 @@
 
             <div class="flex items-center gap-2 shrink-0">
                 @if($isAdmin)
-                    <a href="{{ route('schedules.create') }}" style="background-color: #2383e2 !important; color: #ffffff !important;" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg hover:opacity-90 text-white text-xs font-medium transition-all shadow-xs">
+                    <a href="{{ url('/admin/schedules') }}" style="background-color: #2383e2 !important; color: #ffffff !important;" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg hover:opacity-90 text-white text-xs font-medium transition-all shadow-xs">
                         <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                        <span>Buat Jadwal Baru</span>
+                        <span>Kelola Jadwal</span>
                     </a>
                 @elseif($myNextSchedule)
                     <a href="{{ route('schedules.show', $myNextSchedule->id) }}" style="background-color: #2383e2 !important; color: #ffffff !important;" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg hover:opacity-90 text-white text-xs font-medium transition-all shadow-xs">

@@ -16,23 +16,25 @@ class ActivitiesTable
         return $table
             ->columns([
                 TextColumn::make('title')
+                    ->label('Nama Tugas')
                     ->searchable()
                     ->weight('medium'),
                 TextColumn::make('user.name')
-                    ->label('Assignee')
+                    ->label('Petugas')
                     ->badge()
                     ->color('gray')
                     ->searchable(),
                 TextColumn::make('status')
+                    ->label('Status')
                     ->badge()
-                    ->formatStateUsing(fn (bool $state): string => $state ? 'Done' : 'To Do')
+                    ->formatStateUsing(fn (bool $state): string => $state ? 'Selesai' : 'Belum')
                     ->color(fn (bool $state): string => $state ? 'success' : 'gray'),
                 TextColumn::make('target_date')
-                    ->label('Deadline')
+                    ->label('Batas Waktu')
                     ->dateTime('d M Y H:i')
                     ->sortable(),
                 TextColumn::make('done_time')
-                    ->label('Completed At')
+                    ->label('Selesai Pada')
                     ->dateTime('d M Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

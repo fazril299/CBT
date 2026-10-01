@@ -15,6 +15,7 @@ class SchedulesTable
         return $table
             ->columns([
                 TextColumn::make('piket_type')
+                    ->label('Jenis Piket')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => ucwords(str_replace('_', ' ', $state)))
                     ->color(fn (string $state): string => match ($state) {
@@ -23,16 +24,21 @@ class SchedulesTable
                         default => 'gray',
                     }),
                 TextColumn::make('location')
+                    ->label('Lokasi')
                     ->searchable(),
                 TextColumn::make('date')
+                    ->label('Tanggal')
                     ->date('d M Y')
                     ->sortable(),
                 TextColumn::make('day')
+                    ->label('Hari')
                     ->searchable(),
                 TextColumn::make('time')
+                    ->label('Waktu')
                     ->time('H:i')
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label('Status')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => ucwords(str_replace('_', ' ', $state)))
                     ->color(fn (string $state): string => match ($state) {
