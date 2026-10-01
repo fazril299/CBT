@@ -36,7 +36,7 @@ class AdminPanelProvider extends PanelProvider
                 'panels::sidebar.footer',
                 fn (): string => '
                     <div style="padding: 1rem; text-align: center;">
-                        <a href="'.url('/dashboard').'" style="display: inline-block; padding: 0.35rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.75rem; color: #4b5563; background: #e5e7eb; border-radius: 0.375rem; text-decoration: none; font-weight: 600;">? Ke Dashboard Piket</a>
+                        <a href="'.url('/dashboard').'" style="display: inline-block; padding: 0.35rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.75rem; color: #4b5563; background: #e5e7eb; border-radius: 0.375rem; text-decoration: none; font-weight: 600;">&larr; Ke Dashboard Piket</a>
                         <img src="'.asset('images/admin_hero.png').'" alt="Admin" style="width: 100%; max-width: 180px; height: auto; margin: 0 auto; display: block; opacity: 0.9;">
                     </div>
                     <style>
@@ -59,23 +59,90 @@ class AdminPanelProvider extends PanelProvider
                             font-weight: 700 !important;
                         }
 
+                        /* Base Sidebar Item Button */
                         .fi-sidebar-item-btn {
                             border-radius: 6px !important;
                             color: #37352f !important;
                             margin: 2px 8px !important;
                             padding: 6px 10px !important;
                             font-weight: 500 !important;
+                            transition: background-color 0.15s ease, color 0.15s ease !important;
                         }
 
-                        .fi-sidebar-item-btn:hover {
+                        /* Inactive / Default item icons and text (Persis Notion / Gambar 1) */
+                        .fi-sidebar-item .fi-sidebar-item-btn .fi-sidebar-item-icon,
+                        .fi-sidebar-item .fi-sidebar-item-btn .fi-icon,
+                        .fi-sidebar-item .fi-sidebar-item-btn svg,
+                        .fi-sidebar-item-icon {
+                            color: #787774 !important;
+                            stroke: currentColor !important;
+                        }
+
+                        .fi-sidebar-item .fi-sidebar-item-btn .fi-sidebar-item-label,
+                        .fi-sidebar-item-label {
+                            color: #37352f !important;
+                            font-weight: 500 !important;
+                        }
+
+                        /* Hover state for inactive item */
+                        .fi-sidebar-item-btn:hover,
+                        .fi-sidebar-item:not(.fi-active) > .fi-sidebar-item-btn:hover {
                             background-color: rgba(55, 53, 47, 0.05) !important;
+                            color: #37352f !important;
                         }
 
+                        /* Active Item (Persis Gambar 1: Background abu-abu lembut #efefed, teks gelap #37352f, ikon abu-abu #787774) */
+                        .fi-sidebar-item.fi-active > .fi-sidebar-item-btn,
+                        .fi-sidebar-item.fi-active .fi-sidebar-item-btn,
                         .fi-sidebar-item-active .fi-sidebar-item-btn,
-                        .fi-sidebar-item-btn.fi-active {
-                            background-color: rgba(55, 53, 47, 0.08) !important;
+                        .fi-sidebar-item-btn.fi-active,
+                        .fi-sidebar-item-btn[aria-current="page"] {
+                            background-color: #efefed !important;
+                            background: #efefed !important;
+                            color: #37352f !important;
+                        }
+
+                        .fi-sidebar-item.fi-active > .fi-sidebar-item-btn:hover,
+                        .fi-sidebar-item.fi-active .fi-sidebar-item-btn:hover {
+                            background-color: #eae8e5 !important;
+                        }
+
+                        /* Paksa Teks Aktif TIDAK Biru -> Warna Gelap Notion #37352F */
+                        .fi-sidebar-item.fi-active .fi-sidebar-item-label,
+                        .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label,
+                        .fi-sidebar-item-btn.fi-active .fi-sidebar-item-label,
+                        .fi-sidebar-item.fi-active span {
                             color: #37352f !important;
                             font-weight: 600 !important;
+                        }
+
+                        /* Paksa Ikon Aktif TIDAK Biru -> Warna Abu-Abu Netral #787774 */
+                        .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
+                        .fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-icon,
+                        .fi-sidebar-item.fi-active .fi-icon,
+                        .fi-sidebar-item.fi-active svg,
+                        .fi-sidebar-item-btn.fi-active svg {
+                            color: #787774 !important;
+                            stroke: currentColor !important;
+                        }
+
+                        /* Grouped Dot Indicator */
+                        .fi-sidebar-item-grouped-border-part {
+                            background-color: #787774 !important;
+                        }
+
+                        .fi-sidebar-item.fi-active .fi-sidebar-item-grouped-border-part {
+                            background-color: #37352f !important;
+                        }
+
+                        /* Group labels */
+                        .fi-sidebar-group-label,
+                        .fi-sidebar-group-label span {
+                            color: #9b9a97 !important;
+                            font-size: 11px !important;
+                            font-weight: 600 !important;
+                            text-transform: uppercase !important;
+                            letter-spacing: 0.05em !important;
                         }
 
                         /* TOMBOL PERSIS NOTION "New page" (Biru Solid + Teks PUTIH) */

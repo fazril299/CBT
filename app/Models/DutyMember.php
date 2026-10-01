@@ -114,11 +114,11 @@ class DutyMember extends Model
     {
         return match ($this->effective_status) {
             'hadir' => '✓ Hadir (Terverifikasi)',
-            'menunggu_verifikasi' => '⏳ Menunggu Verifikasi PJ',
+            'menunggu_verifikasi' => 'Menunggu Verifikasi PJ',
             'izin' => 'Izin',
             'sakit' => 'Sakit',
             'belum_waktunya' => 'Belum Mulai (Jadwal Mendatang)',
-            'belum_absen' => '⏳ Belum Piket / Absen',
+            'belum_absen' => 'Belum Piket / Absen',
             'alpa' => 'Alpa (Denda Rp 5.000)',
             default => 'Belum Absen',
         };
